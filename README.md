@@ -1,6 +1,14 @@
 # Thesis project
 
+<div align="center">
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![License](https://img.shields.io/github/license/a1d4r/thesis-project)](https://github.com/a1d4r/thesis-project/blob/master/LICENSE)
+![Coverage Report](assets/images/coverage.svg)
+
 Scalable and efficient approach for reverse geocoding using Uber H3
+
+</div>
 
 ## Very first steps
 
