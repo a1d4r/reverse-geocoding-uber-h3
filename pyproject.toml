@@ -30,6 +30,9 @@ classifiers = [  #! Update me
 [tool.poetry.dependencies]
 python = "^3.9"
 Fiona = "^1.8.21"
+attrs = "^21.4.0"
+jupyter = "^1.0.0"
+geojson = "^2.5.0"
 
 [tool.poetry.dev-dependencies]
 autoflake = "^1.4"
