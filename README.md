@@ -1,43 +1,279 @@
 # Thesis project
-## Scalable and efficient approach for reverse geocoding using Uber H3
 
-[![Build Status](https://github.com/a1d4r/geocoding/workflows/test/badge.svg?branch=master&event=push)](https://github.com/a1d4r/geocoding/actions?query=workflow%3Atest)
-[![codecov](https://codecov.io/gh/a1d4r/geocoding/branch/master/graph/badge.svg)](https://codecov.io/gh/a1d4r/geocoding)
+<div align="center">
+
+[![Build status](https://github.com/a1d4r/thesis-project/workflows/build/badge.svg?branch=master&event=push)](https://github.com/a1d4r/thesis-project/actions?query=workflow%3Abuild)
 [![Python Version](https://img.shields.io/pypi/pyversions/geocoding.svg)](https://pypi.org/project/geocoding/)
-[![wemake-python-styleguide](https://img.shields.io/badge/style-wemake-000000.svg)](https://github.com/wemake-services/wemake-python-styleguide)
+[![Dependencies Status](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)](https://github.com/a1d4r/thesis-project/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Aapp%2Fdependabot)
 
-Reverse geocoding algorithm based on Uber H3
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Security: bandit](https://img.shields.io/badge/security-bandit-green.svg)](https://github.com/PyCQA/bandit)
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/a1d4r/thesis-project/blob/master/.pre-commit-config.yaml)
+[![Semantic Versions](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--versions-e10079.svg)](https://github.com/a1d4r/thesis-project/releases)
+[![License](https://img.shields.io/github/license/a1d4r/thesis-project)](https://github.com/a1d4r/thesis-project/blob/master/LICENSE)
+![Coverage Report](assets/images/coverage.svg)
 
+Scalable and efficient approach for reverse geocoding using Uber H3
 
-## Features
+</div>
 
-- Fully typed with annotations and checked with mypy, [PEP561 compatible](https://www.python.org/dev/peps/pep-0561/)
-- Add yours!
+## Very first steps
 
+### Initialize your code
+
+1. Initialize `git` inside your repo:
+
+```bash
+cd geocoding && git init
+```
+
+2. If you don't have `Poetry` installed run:
+
+```bash
+make poetry-download
+```
+
+3. Initialize poetry and install `pre-commit` hooks:
+
+```bash
+make install
+make pre-commit-install
+```
+
+4. Run the codestyle:
+
+```bash
+make codestyle
+```
+
+5. Upload initial code to GitHub:
+
+```bash
+git add .
+git commit -m "Initial commit"
+git branch -M master
+git remote add origin https://github.com/a1d4r/thesis-project.git
+git push -u origin master
+```
+
+### Poetry
+
+Want to know more about Poetry? Check [its documentation](https://python-poetry.org/docs/).
+
+<details>
+<summary>Details about Poetry</summary>
+<p>
+
+Poetry's [commands](https://python-poetry.org/docs/cli/#commands) are very intuitive and easy to learn, like:
+
+- `poetry add numpy@latest`
+- `poetry run pytest`
+- `poetry publish --build`
+
+etc
+</p>
+</details>
 
 ## Installation
 
 ```bash
-pip install geocoding
+poetry install
 ```
 
+### Makefile usage
 
-## Example
+[`Makefile`](https://github.com/a1d4r/thesis-project/blob/master/Makefile) contains a lot of functions for faster development.
 
-Showcase how your project can be used:
+<details>
+<summary>1. Download and remove Poetry</summary>
+<p>
 
-```python
-from geocoding.example import some_function
+To download and install Poetry run:
 
-print(some_function(3, 4))
-# => 7
+```bash
+make poetry-download
 ```
 
-## License
+To uninstall
 
-[MIT](https://github.com/a1d4r/geocoding/blob/master/LICENSE)
+```bash
+make poetry-remove
+```
 
+</p>
+</details>
 
-## Credits
+<details>
+<summary>2. Install all dependencies and pre-commit hooks</summary>
+<p>
 
-This project was generated with [`wemake-python-package`](https://github.com/wemake-services/wemake-python-package). Current template version is: [a59d812c6698fe87af04a96f780b4a19dffe3584](https://github.com/wemake-services/wemake-python-package/tree/a59d812c6698fe87af04a96f780b4a19dffe3584). See what is [updated](https://github.com/wemake-services/wemake-python-package/compare/a59d812c6698fe87af04a96f780b4a19dffe3584...master) since then.
+Install requirements:
+
+```bash
+make install
+```
+
+Pre-commit hooks coulb be installed after `git init` via
+
+```bash
+make pre-commit-install
+```
+
+</p>
+</details>
+
+<details>
+<summary>3. Codestyle</summary>
+<p>
+
+Automatic formatting uses `pyupgrade`, `isort` and `black`.
+
+```bash
+make codestyle
+
+# or use synonym
+make format
+```
+
+Codestyle checks only, without rewriting files:
+
+```bash
+make check-codestyle
+```
+
+> Note: `check-codestyle` uses `isort`, `black` and `darglint` library
+
+Update all dev libraries to the latest version using one comand
+
+```bash
+make update-dev-deps
+```
+
+<details>
+<summary>4. Code security</summary>
+<p>
+
+```bash
+make check-security
+```
+
+This command identifies security issues with `Safety` and `Bandit`.
+
+```bash
+make check-security
+```
+
+To validate `pyproject.toml` use
+```bash
+make check-poetry
+```
+
+</p>
+</details>
+
+</p>
+</details>
+
+<details>
+<summary>5. Linting and type checks</summary>
+<p>
+
+Run static linting with `pylint` and `mypy`:
+
+```bash
+make static-lint
+```
+
+</p>
+</details>
+
+<details>
+<summary>6. Tests with coverage badges</summary>
+<p>
+
+Run `pytest`
+
+```bash
+make test
+```
+
+</p>
+</details>
+
+<details>
+<summary>7. All linters</summary>
+<p>
+
+Of course there is a command to ~~rule~~ run all linters in one:
+
+```bash
+make lint
+```
+
+the same as:
+
+```bash
+make test && make check-codestyle && make static-lint && make check-safety
+```
+
+</p>
+</details>
+
+<details>
+<summary>8. Cleanup</summary>
+<p>
+Delete pycache files
+
+```bash
+make pycache-remove
+```
+
+Remove package build
+
+```bash
+make build-remove
+```
+
+Delete .DS_STORE files
+
+```bash
+make dsstore-remove
+```
+
+Remove .mypycache
+
+```bash
+make mypycache-remove
+```
+
+Or to remove all above run:
+
+```bash
+make cleanup
+```
+
+</p>
+</details>
+
+## 🛡 License
+
+[![License](https://img.shields.io/github/license/a1d4r/thesis-project)](https://github.com/a1d4r/thesis-project/blob/master/LICENSE)
+
+This project is licensed under the terms of the `MIT` license. See [LICENSE](https://github.com/a1d4r/thesis-project/blob/master/LICENSE) for more details.
+
+## 📃 Citation
+
+```bibtex
+@misc{geocoding,
+  author = {a1d4r},
+  title = {Reverse geocoding algorithm based on Uber H3},
+  year = {2022},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/a1d4r/thesis-project}}
+}
+```
+
+## Credits [![🚀 Your next Python package needs a bleeding-edge project structure.](https://img.shields.io/badge/python--package--template-%F0%9F%9A%80-brightgreen)](https://github.com/TezRomacH/python-package-template)
+
+This project was generated with [`python-package-template`](https://github.com/TezRomacH/python-package-template)
