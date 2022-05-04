@@ -9,11 +9,13 @@ from geojson import Polygon
 
 from geocoding.convertors.geojson import to_polygons
 
+C = TypeVar("C")
+
 
 class GADMBaseModel(ABC):
     @classmethod
     @abstractmethod
-    def from_shapefile_object(cls, obj: Dict[str, Any]) -> "GADMBaseModel":
+    def from_shapefile_object(cls: type[C], obj: Dict[str, Any]) -> C:
         pass
 
 
