@@ -89,17 +89,26 @@ class GADMCountrySubdivision(GADMBaseModel):
 
     @classmethod
     def from_shapefile_object(cls, obj: Dict[str, Any]) -> "GADMCountrySubdivision":
+        properties = obj["properties"]
+        if properties["VARNAME_1"]:
+            other_names = properties["VARNAME_1"].split("|")
+        else:
+            other_names = []
+        if properties["NL_NAME_1"]:
+            localized_names = properties["NL_NAME_1"].split("|")
+        else:
+            localized_names = []
         return GADMCountrySubdivision(
             id=int(obj["id"]),
-            name=obj["properties"]["NAME_1"],
-            code=obj["properties"]["GID_1"],
+            name=properties["NAME_1"],
+            code=properties["GID_1"],
             geometry=to_polygons(obj["geometry"]),
-            other_names=(obj["properties"]["VARNAME_1"] or "").split("|"),
-            localized_names=(obj["properties"]["NL_NAME_1"] or "").split("|"),
-            administrative_type=obj["properties"]["ENGTYPE_1"],
-            localized_administrative_type=obj["properties"]["TYPE_1"],
-            country_code=obj["GID_0"],
-            country_name=obj["NAME_0"],
+            other_names=other_names,
+            localized_names=localized_names,
+            administrative_type=properties["ENGTYPE_1"],
+            localized_administrative_type=properties["TYPE_1"],
+            country_code=properties["GID_0"],
+            country_name=properties["NAME_0"],
         )
 
 
@@ -111,35 +120,39 @@ class GADMBaseExtractor(Generic[GADMModelType]):
     Extracts info and geojson from GADM dataset.
     """
 
-    layer_name: str
-    model_class: type[GADMModelType]
-
     def __init__(self, path: Path) -> None:
         self.path = path
 
-    # @abstractmethod
-    # @property
-    # def layer_name(self) -> str:
-    #     """Name of the layer from GADM shapefile."""
-    #
-    # @abstractmethod
-    # @property
-    # def model_class(self) -> type[GADMModelType]:
-    #     """GADM Model specific to objects from the layer."""
+    @property
+    @abstractmethod
+    def layer_name(self) -> str:
+        """Name of the layer from GADM shapefile."""
 
-    def read_shapefile(self, path: Path, layer_name: str) -> Iterator[GADMModelType]:
-        with fiona.open(path, layer=layer_name) as src:
+    @property
+    @abstractmethod
+    def model_class(self) -> type[GADMModelType]:
+        """GADM Model specific to objects from the layer."""
+
+    def __iter__(self) -> Iterator[GADMModelType]:
+        with fiona.open(self.path, layer=self.layer_name) as src:
             for obj in src:
                 yield self.model_class.from_shapefile_object(obj)
 
-    def __iter__(self) -> Iterator[GADMModelType]:
-        return self.read_shapefile(self.path, self.layer_name)
 
-
-class CountriesExtractor(GADMBaseExtractor[GADMCountry]):
+class GADMCountriesExtractor(GADMBaseExtractor[GADMCountry]):
     """
     Extracts info and geojson of all countries in the world from GADM dataset.
     """
 
     layer_name: str = "gadm36_0"
     model_class = GADMCountry
+
+
+class GADMCountrySubdivisionsExtractor(GADMBaseExtractor[GADMCountrySubdivision]):
+    """
+    Extracts info and geojson of all country subdivision
+    in the world from GADM dataset.
+    """
+
+    layer_name: str = "gadm36_1"
+    model_class = GADMCountrySubdivision
