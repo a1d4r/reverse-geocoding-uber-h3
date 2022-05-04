@@ -14,8 +14,10 @@ def test_gadm_country_model(gadm_country_row):
 def test_gadm_country_model_to_cql(gadm_country_row):
     gadm_country = GADMCountry.from_shapefile_object(gadm_country_row)
     cql_country = gadm_country.to_cql_model(hex_id=123)
-    expected = HexCountry(hex_id=123, id=0, name="Aruba", code="ABW")
-    assert cql_country == expected
+    assert cql_country.hex_id == 123
+    assert cql_country.id == 0
+    assert cql_country.name == "Aruba"
+    assert cql_country.code == "ABW"
 
 
 def test_gadm_country_subdivision_model(gadm_country_subdivision_row):
@@ -41,17 +43,14 @@ def test_gadm_country_subdivision_model_to_cql(gadm_country_subdivision_row):
         gadm_country_subdivision_row
     )
     cql_subdivision = subdivision.to_cql_model(hex_id=123)
-    expected = HexCountrySubdivision(
-        hex_id=123,
-        id=1,
-        name="Badghis",
-        code="AFG.2_1",
-        other_names=["Badghes", "Badghisat", "Badgis"],
-        localized_names=[],
-        administrative_type="Province",
-        localized_administrative_type="Velayat",
-        country_code="AFG",
-        country_name="Afghanistan",
-        hasc_code="AF.BG",
-    )
-    assert cql_subdivision == expected
+    assert cql_subdivision.hex_id == 123
+    assert cql_subdivision.id == 1
+    assert cql_subdivision.name == "Badghis"
+    assert cql_subdivision.code == "AFG.2_1"
+    assert cql_subdivision.other_names == {"Badghes", "Badghisat", "Badgis"}
+    assert cql_subdivision.localized_names == set()
+    assert cql_subdivision.administrative_type == "Province"
+    assert cql_subdivision.localized_administrative_type == "Velayat"
+    assert cql_subdivision.country_code == "AFG"
+    assert cql_subdivision.country_name == "Afghanistan"
+    assert cql_subdivision.hasc_code == "AF.BG"

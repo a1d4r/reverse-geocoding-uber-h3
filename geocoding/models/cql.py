@@ -25,7 +25,7 @@ class HexCountrySubdivision(CQLModel):
     id = columns.Integer()
     name = columns.Text()
     code = columns.Text()
-    other_name = columns.Set(columns.Text)
+    other_names = columns.Set(columns.Text)
     localized_names = columns.Set(columns.Text)
     administrative_type = columns.Text()
     localized_administrative_type = columns.Text()

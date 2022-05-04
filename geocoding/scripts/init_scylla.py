@@ -30,10 +30,11 @@ def initialize_scylla() -> None:
 
     logger.info("Creating keyspace...")
     session.execute(
-        f"""
-        CREATE KEYSPACE IF NOT EXISTS {settings.SCYLLA_KEYSPACE}
+        """
+        CREATE KEYSPACE IF NOT EXISTS %s
         WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'};
         """
+        % settings.SCYLLA_KEYSPACE
     )
 
     logger.info("Connecting to keyspace...")
