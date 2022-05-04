@@ -13,3 +13,13 @@ def load_json():
             return json.load(f)
 
     return _load_json
+
+
+@pytest.fixture
+def gadm_country_row(load_json):
+    return load_json("gadm36_0_row.json")
+
+
+@pytest.fixture
+def gadm_country_subdivision_row(load_json):
+    return load_json("gadm36_1_row.json")

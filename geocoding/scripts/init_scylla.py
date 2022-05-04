@@ -9,7 +9,7 @@ from cassandra.cqlengine.management import sync_table
 from loguru import logger
 
 from geocoding import settings
-from geocoding.db.models import HexCountry, HexCountrySubdivision
+from geocoding.models.cql import HexCountry, HexCountrySubdivision
 
 
 def initialize_scylla() -> None:

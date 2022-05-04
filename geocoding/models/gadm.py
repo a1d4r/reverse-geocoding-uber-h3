@@ -1,9 +1,7 @@
-from typing import Any, Dict, Generic, Iterator, Optional, TypeVar
+from typing import Any, Dict, Optional, TypeVar
 
 from abc import ABC, abstractmethod
-from pathlib import Path
 
-import fiona
 from attrs import define
 from geojson import Polygon
 
@@ -112,49 +110,3 @@ class GADMCountrySubdivision(GADMBaseModel):
             country_name=properties["NAME_0"],
             hasc_code=properties["HASC_1"],
         )
-
-
-GADMModelType = TypeVar("GADMModelType", bound=GADMBaseModel)
-
-
-class GADMBaseExtractor(Generic[GADMModelType]):
-    """
-    Extracts info and geojson from GADM dataset.
-    """
-
-    def __init__(self, path: Path) -> None:
-        self.path = path
-
-    @property
-    @abstractmethod
-    def layer_name(self) -> str:
-        """Name of the layer from GADM shapefile."""
-
-    @property
-    @abstractmethod
-    def model_class(self) -> type[GADMModelType]:
-        """GADM Model specific to objects from the layer."""
-
-    def __iter__(self) -> Iterator[GADMModelType]:
-        with fiona.open(self.path, layer=self.layer_name) as src:
-            for obj in src:
-                yield self.model_class.from_shapefile_object(obj)
-
-
-class GADMCountriesExtractor(GADMBaseExtractor[GADMCountry]):
-    """
-    Extracts info and geojson of all countries in the world from GADM dataset.
-    """
-
-    layer_name: str = "gadm36_0"
-    model_class = GADMCountry
-
-
-class GADMCountrySubdivisionsExtractor(GADMBaseExtractor[GADMCountrySubdivision]):
-    """
-    Extracts info and geojson of all country subdivision
-    in the world from GADM dataset.
-    """
-
-    layer_name: str = "gadm36_1"
-    model_class = GADMCountrySubdivision
