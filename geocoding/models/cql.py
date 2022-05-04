@@ -11,6 +11,7 @@ class HexCountry(CQLModel):
     __table_name__ = "hex_countries"
 
     hex_id = columns.BigInt(primary_key=True)
+    id = columns.Integer()
     name = columns.Text()
     code = columns.Text()
 
@@ -21,6 +22,7 @@ class HexCountrySubdivision(CQLModel):
     __table_name__ = "hex_subdivisions"
 
     hex_id = columns.BigInt(primary_key=True)
+    id = columns.Integer()
     name = columns.Text()
     code = columns.Text()
     other_name = columns.Set(columns.Text)

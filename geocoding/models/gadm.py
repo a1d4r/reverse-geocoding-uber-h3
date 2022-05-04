@@ -2,10 +2,11 @@ from typing import Any, Dict, Optional, TypeVar
 
 from abc import ABC, abstractmethod
 
-from attrs import define
+from attrs import asdict, define, fields, filters
 from geojson import Polygon
 
 from geocoding.convertors.geojson import to_polygons
+from geocoding.models.cql import HexCountry, HexCountrySubdivision
 
 C = TypeVar("C")
 
@@ -43,6 +44,17 @@ class GADMCountry(GADMBaseModel):
             name=obj["properties"]["NAME_0"],
             code=obj["properties"]["GID_0"],
             geometry=to_polygons(obj["geometry"]),
+        )
+
+    def to_cql_model(self, hex_id: int) -> HexCountry:
+        return HexCountry(
+            hex_id=hex_id,
+            **asdict(
+                self,
+                filter=filters.exclude(
+                    fields(GADMCountry).geometry,
+                ),
+            ),
         )
 
 
@@ -109,4 +121,15 @@ class GADMCountrySubdivision(GADMBaseModel):
             country_code=properties["GID_0"],
             country_name=properties["NAME_0"],
             hasc_code=properties["HASC_1"],
+        )
+
+    def to_cql_model(self, hex_id: int) -> HexCountrySubdivision:
+        return HexCountrySubdivision(
+            hex_id=hex_id,
+            **asdict(
+                self,
+                filter=filters.exclude(
+                    fields(GADMCountrySubdivision).geometry,
+                ),
+            ),
         )
