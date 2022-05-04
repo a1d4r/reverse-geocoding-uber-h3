@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 
 import fiona
-from attr import define
+from attrs import define
 from geojson import Polygon
 
 from geocoding.convertors.geojson import to_polygons
