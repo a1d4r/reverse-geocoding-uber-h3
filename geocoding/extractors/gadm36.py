@@ -1,4 +1,4 @@
-from typing import Any, Dict, Generic, Iterator, TypeVar
+from typing import Any, Dict, Generic, Iterator, Optional, TypeVar
 
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -8,10 +8,6 @@ from attr import define
 from geojson import Polygon
 
 from geocoding.convertors.geojson import to_polygons
-
-GADM_PATH = "/Users/a-garikhanov/Documents/gadm36_levels_shp"
-LAYER_NAME = "gadm36_0"
-RESOLUTION = 7
 
 
 class GADMBaseModel(ABC):
@@ -87,6 +83,9 @@ class GADMCountrySubdivision(GADMBaseModel):
     country_name: str
     "Official country name in latin script"
 
+    hasc_code: Optional[str]
+    "HASC. A unique ID from Statoids"
+
     @classmethod
     def from_shapefile_object(cls, obj: Dict[str, Any]) -> "GADMCountrySubdivision":
         properties = obj["properties"]
@@ -109,6 +108,7 @@ class GADMCountrySubdivision(GADMBaseModel):
             localized_administrative_type=properties["TYPE_1"],
             country_code=properties["GID_0"],
             country_name=properties["NAME_0"],
+            hasc_code=properties["HASC_1"],
         )
 
 

@@ -44,6 +44,7 @@ def test_gadm_country_subdivision_model(gadm_country_subdivision_row):
     assert subdivision.localized_administrative_type == "Velayat"
     assert subdivision.country_code == "AFG"
     assert subdivision.country_name == "Afghanistan"
+    assert subdivision.hasc_code == "AF.BG"
     assert len(subdivision.geometry) == 1
     assert len(subdivision.geometry[0]["coordinates"][0]) == 647
 
