@@ -4,7 +4,7 @@ from pathlib import Path
 import fiona
 import pytest
 
-from geocoding.extractors.gadm36 import CountriesExtractor, CountryGADM
+from geocoding.extractors.gadm36 import CountriesExtractor, GADMCountry
 
 
 @pytest.fixture
@@ -13,7 +13,7 @@ def gadm_row(load_json):
 
 
 def test_gadm_country_model(gadm_row):
-    country = CountryGADM.from_shapefile_object(gadm_row)
+    country = GADMCountry.from_shapefile_object(gadm_row)
     assert country.id == 0
     assert country.name == "Aruba"
     assert country.code == "ABW"
