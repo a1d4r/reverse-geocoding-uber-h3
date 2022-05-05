@@ -4,7 +4,7 @@ import h3
 from geojson import Polygon
 
 
-def polygons_to_hexagons(polygons: List[Polygon], resolution: int) -> List[int]:
+def fill_polygons_by_hexagons(polygons: List[Polygon], resolution: int) -> List[int]:
     """
     Tile the area covered by polygons with hexagons of specified resolution.
     Return 64-bit integer IDs of these hexagons.

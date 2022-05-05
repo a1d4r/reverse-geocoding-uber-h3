@@ -11,9 +11,9 @@ class ScyllaConnector:
     def __init__(
         self,
         session: Session,
-        max_concurrent_writes: int = 1000,
-        max_concurrent_reads: int = 100,
-        timeout: int = 60,
+        max_concurrent_writes: int = settings.SCYLLA_CONCURRENT_WRITES,
+        max_concurrent_reads: int = settings.SCYLLA_CONCURRENT_READS,
+        timeout: int = settings.SCYLLA_TIMEOUT,
     ) -> None:
         """
         Arguments:
@@ -28,7 +28,7 @@ class ScyllaConnector:
         self._timeout = timeout
 
     def prepare_cql_statement(self, cql_filename: str) -> PreparedStatement:
-        with open(settings.CQL_QUERIES_PATH / cql_filename, "r") as f:
+        with open(settings.CQL_QUERIES_DIR / cql_filename, "r") as f:
             return self._session.prepare(f.read())
 
     @staticmethod

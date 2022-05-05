@@ -1,6 +1,6 @@
 from geojson import Polygon
 
-from geocoding.processing.h3 import polygons_to_hexagons
+from geocoding.processing.h3 import fill_polygons_by_hexagons
 
 
 def test_polygons_to_hexagons():
@@ -24,7 +24,7 @@ def test_polygons_to_hexagons():
             ]
         ]
     )
-    hexagons = polygons_to_hexagons([polygon1, polygon2], resolution=7)
+    hexagons = fill_polygons_by_hexagons([polygon1, polygon2], resolution=7)
     assert set(hexagons) == {
         608692970585063423,
         608692970719281151,

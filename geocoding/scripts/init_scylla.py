@@ -1,5 +1,5 @@
 """
-Creating keyspace and tables in ScyllaDB.
+Create keyspace and tables in ScyllaDB.
 """
 import os
 
