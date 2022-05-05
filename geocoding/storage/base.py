@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import Generic, Optional, TypeVar, cast
 
 from abc import abstractmethod
 
@@ -17,11 +17,17 @@ class BaseStorage(Generic[CQLModelType]):
     def __init__(self, scylla_connector: ScyllaConnector) -> None:
         self._scylla = scylla_connector
         self._insert_query = self._scylla.prepare_cql_statement(self.insert_query_name)
+        self._read_query = self._scylla.prepare_cql_statement(self.read_query_name)
 
     @property
     @abstractmethod
     def insert_query_name(self) -> str:
         """File name of CQL insert query, must end with .cql"""
+
+    @property
+    @abstractmethod
+    def read_query_name(self) -> str:
+        """File name of CQL read query, must end with .cql"""
 
     @property
     @abstractmethod
@@ -38,3 +44,10 @@ class BaseStorage(Generic[CQLModelType]):
             self._insert_query,
             [list(cql_object.values()) for cql_object in cql_objects],
         )
+
+    def read(self, hex_id: int) -> Optional[CQLModelType]:
+        """Read record by hex_id."""
+        result = list(self._scylla.execute(self._read_query, [hex_id]))
+        if result:
+            return cast(CQLModelType, self.cql_model_class(**result[0]))
+        return None

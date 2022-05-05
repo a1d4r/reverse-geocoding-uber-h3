@@ -1,7 +1,7 @@
 from typing import Optional
 
 from cassandra.cluster import Cluster, PlainTextAuthProvider, Session
-from cassandra.query import named_tuple_factory
+from cassandra.query import dict_factory
 from loguru import logger
 
 from geocoding import settings
@@ -25,7 +25,7 @@ def get_session(keyspace: Optional[str] = None) -> Session:
     )
 
     session = cluster.connect(keyspace)
-    session.row_factory = named_tuple_factory
+    session.row_factory = dict_factory
 
     logger.info("Connected to Scylla cluster.")
 

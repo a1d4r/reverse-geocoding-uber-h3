@@ -15,6 +15,7 @@ GADMModelType = TypeVar("GADMModelType", bound=GADMBaseModel)
 
 class GADMBaseExtractor(Generic[GADMModelType]):
     """
+    An iterator over shapefile.
     Extracts info and geojson from GADM dataset.
     """
 
@@ -39,6 +40,7 @@ class GADMBaseExtractor(Generic[GADMModelType]):
 
 class GADMCountriesExtractor(GADMBaseExtractor[GADMCountry]):
     """
+    An iterator over shapefile.
     Extracts info and geojson of all countries in the world from GADM dataset.
     """
 
@@ -48,6 +50,7 @@ class GADMCountriesExtractor(GADMBaseExtractor[GADMCountry]):
 
 class GADMCountrySubdivisionsExtractor(GADMBaseExtractor[GADMCountrySubdivision]):
     """
+    An iterator over shapefile.
     Extracts info and geojson of all country subdivision
     in the world from GADM dataset.
     """

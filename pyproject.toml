@@ -31,7 +31,6 @@ classifiers = [  #! Update me
 python = "^3.9"
 Fiona = "^1.8.21"
 attrs = "^21.4.0"
-jupyter = "^1.0.0"
 geojson = "^2.5.0"
 h3 = "^3.7.4"
 dash = "^2.3.1"

@@ -6,4 +6,5 @@ class CountrySubdivisionsStorage(BaseStorage[HexCountrySubdivision]):
     """Storage layer for countries."""
 
     insert_query_name = "insert_subdivision.cql"
+    read_query_name = "read_subdivision.cql"
     cql_model_class = HexCountrySubdivision
