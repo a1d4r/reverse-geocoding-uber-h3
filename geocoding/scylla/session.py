@@ -8,6 +8,7 @@ from geocoding import settings
 
 
 def get_session(keyspace: Optional[str] = None) -> Session:
+    """Connect to Scylla and return session."""
     cluster = Cluster(
         settings.SCYLLA_CLUSTER,
         protocol_version=3,
