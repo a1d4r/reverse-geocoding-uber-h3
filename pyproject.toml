@@ -186,7 +186,8 @@ disable = [
   "no-self-argument",  # pydantic validators
   "no-self-use",  # pydantic validators
   "redefined-outer-name",  # pytest fixtures
-  "unused-import",  # pylint does not give a fuck about type annotations
+  "unused-import",  # pylint does not check type annotations
+  "consider-using-f-string",
 ]
 
 [tool.pylint.refactoring]

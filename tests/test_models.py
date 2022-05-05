@@ -1,4 +1,3 @@
-from geocoding.models.cql import HexCountry, HexCountrySubdivision
 from geocoding.models.gadm import GADMCountry, GADMCountrySubdivision
 
 
