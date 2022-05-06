@@ -1,6 +1,6 @@
 from geojson import Polygon
 
-from geocoding.processing.h3 import fill_polygons_by_hexagons
+from geocoding.convertors.h3 import fill_polygons_by_hexagons, get_hexagon_by_point
 
 
 def test_polygons_to_hexagons():
@@ -39,3 +39,7 @@ def test_polygons_to_hexagons():
         608693008434462719,
         608693008484794367,
     }
+
+
+def test_get_hexagon_by_point():
+    assert get_hexagon_by_point(45, 40, 2) == 586265647244115967

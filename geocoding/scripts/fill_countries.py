@@ -4,11 +4,11 @@ Fill countries corresponding to H3 hexagon IDs in Scylla.
 from loguru import logger
 
 from geocoding import settings
+from geocoding.convertors.h3 import fill_polygons_by_hexagons
 from geocoding.extractors.gadm import GADMCountriesExtractor
-from geocoding.processing.h3 import fill_polygons_by_hexagons
 from geocoding.scylla.connector import ScyllaConnector
 from geocoding.scylla.session import get_session
-from geocoding.storage.countries import CountriesStorage
+from geocoding.storage import CountriesStorage
 
 logger.add(settings.LOGS_DIR / "file_{time}.log")
 

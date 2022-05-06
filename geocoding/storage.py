@@ -4,6 +4,7 @@ from abc import abstractmethod
 
 from cassandra.cqlengine.models import Model as CQLModel
 
+from geocoding.models.cql import HexCountry, HexCountrySubdivision
 from geocoding.scylla.connector import ScyllaConnector
 
 CQLModelType = TypeVar("CQLModelType", bound=CQLModel)
@@ -51,3 +52,19 @@ class BaseStorage(Generic[CQLModelType]):
         if result:
             return cast(CQLModelType, self.cql_model_class(**result[0]))
         return None
+
+
+class CountriesStorage(BaseStorage[HexCountry]):
+    """Storage layer for countries."""
+
+    insert_query_name = "insert_country.cql"
+    read_query_name = "read_country.cql"
+    cql_model_class = HexCountry
+
+
+class CountrySubdivisionsStorage(BaseStorage[HexCountrySubdivision]):
+    """Storage layer for countries."""
+
+    insert_query_name = "insert_subdivision.cql"
+    read_query_name = "read_subdivision.cql"
+    cql_model_class = HexCountrySubdivision
