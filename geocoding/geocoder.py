@@ -18,7 +18,7 @@ def get_country_by_point(lat: float, lng: float) -> Optional[HexCountry]:
     return countries_storage.read(hex_id)
 
 
-def get_get_country_subdivision_by_point(
+def get_country_subdivision_by_point(
     lat: float, lng: float
 ) -> Optional[HexCountrySubdivision]:
     hex_id = get_hexagon_by_point(lat, lng, settings.SUBDIVISIONS_H3_RESOLUTION)
