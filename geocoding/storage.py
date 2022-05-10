@@ -3,6 +3,7 @@ from typing import Generic, Optional, TypeVar, cast
 from abc import abstractmethod
 
 from cassandra.cqlengine.models import Model as CQLModel
+from loguru import logger
 
 from geocoding.models.cql import HexCountry, HexCountrySubdivision
 from geocoding.scylla.connector import ScyllaConnector
@@ -41,17 +42,39 @@ class BaseStorage(Generic[CQLModelType]):
 
     def insert_many(self, cql_objects: list[CQLModelType]) -> None:
         """Insert multiple records in the database."""
-        self._scylla.execute_concurrently(
+        results = self._scylla.execute_concurrently(
             self._insert_query,
             [list(cql_object.values()) for cql_object in cql_objects],
         )
+        for cql_object, result in zip(cql_objects, results):
+            if isinstance(result, Exception):
+                logger.error(
+                    "Failed to insert row {}: ", dict(cql_object), repr(result)
+                )
 
     def read(self, hex_id: int) -> Optional[CQLModelType]:
-        """Read record by hex_id."""
+        """Read record by ID of hexagon."""
         result = list(self._scylla.execute(self._read_query, [hex_id]))
         if result:
             return cast(CQLModelType, self.cql_model_class(**result[0]))
         return None
+
+    def read_many(self, hex_ids: list[int]) -> dict[int, Optional[CQLModelType]]:
+        """Read multiple records by IDs of hexagons."""
+        results = self._scylla.execute_concurrently(
+            self._read_query,
+            [[hex_id] for hex_id in hex_ids],
+        )
+        results_by_hex_id = {hex_id: None for hex_id in hex_ids}
+        for hex_id, result in zip(hex_ids, results):
+            if isinstance(result, Exception):
+                logger.error(
+                    "Failed to retrieve row by hex_id={}: {}", hex_id, repr(result)
+                )
+            else:
+                cql_obj = cast(CQLModelType, self.cql_model_class(**result[0]))
+                results_by_hex_id[hex_id] = cql_obj
+        return results_by_hex_id
 
 
 class CountriesStorage(BaseStorage[HexCountry]):

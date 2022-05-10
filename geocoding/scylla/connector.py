@@ -2,7 +2,6 @@ from typing import Any, Dict, Optional, Sequence, Union
 
 from cassandra.cluster import ResponseFuture, ResultSet, Session
 from cassandra.query import PreparedStatement, SimpleStatement
-from loguru import logger
 
 from geocoding import settings
 
@@ -11,20 +10,17 @@ class ScyllaConnector:
     def __init__(
         self,
         session: Session,
-        max_concurrent_writes: int = settings.SCYLLA_CONCURRENT_WRITES,
-        max_concurrent_reads: int = settings.SCYLLA_CONCURRENT_READS,
+        _max_concurrent_queries: int = settings.SCYLLA_CONCURRENT_QUERIES,
         timeout: int = settings.SCYLLA_TIMEOUT,
     ) -> None:
         """
         Arguments:
             session: Scylla session
-            max_concurrent_writes: number of writes being executed without blocking
-            max_concurrent_reads: number of reads being executed without blocking
+            _max_concurrent_queries: number of queries being executed without blocking
             timeout: operation timeout, in seconds
         """
         self._session = session
-        self._max_concurrent_writes = max_concurrent_writes
-        self._max_concurrent_reads = (max_concurrent_reads,)
+        self._max_concurrent_queries = _max_concurrent_queries
         self._timeout = timeout
 
     def prepare_cql_statement(self, cql_filename: str) -> PreparedStatement:
@@ -32,19 +28,20 @@ class ScyllaConnector:
             return self._session.prepare(f.read())
 
     @staticmethod
-    def _wait_futures(futures: list[ResponseFuture]) -> list[Exception]:
+    def _wait_futures(
+        futures: list[ResponseFuture],
+    ) -> list[Union[Exception, ResultSet]]:
         """
         Wait for futures to execute.
-        Return list of exceptions, if any, otherwise empty list.
+        Return list of results. Each result is either ResultSet or Exception
         """
-        exceptions = []
+        results = []
         for future in futures:
             try:
-                future.result()
+                results.append(future.result())
             except Exception as exc:  # pylint: disable=broad-except
-                logger.exception("Query failed")
-                exceptions.append(exc)
-        return exceptions
+                results.append(exc)
+        return results
 
     def execute(
         self,
@@ -52,7 +49,7 @@ class ScyllaConnector:
         params: Optional[Union[Sequence[Any], Dict[str, Any]]],
     ) -> ResultSet:
         """
-        Execute query
+        Execute query with specified parameters
         """
         return self._session.execute(query, params, timeout=self._timeout)
 
@@ -60,23 +57,19 @@ class ScyllaConnector:
         self,
         query: Union[PreparedStatement, SimpleStatement],
         params_list: list[Union[Sequence[Any], Dict[str, Any]]],
-    ) -> list[Exception]:
+    ) -> list[Union[Exception, ResultSet]]:
         """
         Execute the same query with different parameters concurrently.
-        Return list of exceptions, if any, otherwise empty list.
+        Return list of results. Each result is either ResultSet or Exception
         """
+        results = []
         futures = []
-        exceptions = []
         for i, params in enumerate(params_list):
             futures.append(
                 self._session.execute_async(query, params, timeout=self._timeout)
             )
-            if (i + 1) % self._max_concurrent_writes == 0:
-                exceptions.extend(self._wait_futures(futures))
+            if (i + 1) % self._max_concurrent_queries == 0:
+                results.extend(self._wait_futures(futures))
                 futures = []
-        logger.debug(
-            "Succeed: {}, failed: {}",
-            len(params_list) - len(exceptions),
-            len(exceptions),
-        )
-        return exceptions
+        results.extend(self._wait_futures(futures))
+        return results
