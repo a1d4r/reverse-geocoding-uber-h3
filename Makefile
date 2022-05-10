@@ -44,7 +44,6 @@ format: codestyle
 .PHONY: test
 test:
 	poetry run pytest -c pyproject.toml --cov-report=html --cov=geocoding $(TESTS)
-	poetry run coverage-badge -o assets/images/coverage.svg -f
 
 # Validate pyproject.toml
 .PHONY: check-poetry

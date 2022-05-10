@@ -1,23 +1,14 @@
 # Thesis project
 
-<div align="center">
-
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![License](https://img.shields.io/github/license/a1d4r/thesis-project)](https://github.com/a1d4r/thesis-project/blob/master/LICENSE)
-![Coverage Report](assets/images/coverage.svg)
-
 Scalable and efficient approach for reverse geocoding using Uber H3
 
-</div>
+## Setup
 
-## Very first steps
-
-### Initialize your code
-
-1. Initialize `git` inside your repo:
+1. Clone this repository
 
 ```bash
-cd geocoding && git init
+git clone https://github.com/a1d4r/reverse-geocoding-uber-h3.git
+cd reverse-geocoding-uber-h3 
 ```
 
 2. If you don't have `Poetry` installed run:
@@ -26,54 +17,44 @@ cd geocoding && git init
 make poetry-download
 ```
 
-3. Initialize poetry and install `pre-commit` hooks:
-
+3. Install dependencies:
 ```bash
 make install
+```
+
+## Development
+
+Install pre-commit hooks:
+
+```bash
 make pre-commit-install
 ```
 
-4. Run the codestyle:
+Format source code:
 
 ```bash
-make codestyle
+make format
 ```
 
-5. Upload initial code to GitHub:
+Check codestyle and run static linters:
 
 ```bash
-git add .
-git commit -m "Initial commit"
-git branch -M master
-git remote add origin https://github.com/a1d4r/thesis-project.git
-git push -u origin master
+make lint
 ```
 
-### Poetry
-
-Want to know more about Poetry? Check [its documentation](https://python-poetry.org/docs/).
-
-<details>
-<summary>Details about Poetry</summary>
-<p>
-
-Poetry's [commands](https://python-poetry.org/docs/cli/#commands) are very intuitive and easy to learn, like:
-
-- `poetry add numpy@latest`
-- `poetry run pytest`
-- `poetry publish --build`
-
-etc
-</p>
-</details>
-
-## Installation
+Run tests:
 
 ```bash
-poetry install
+make test
 ```
 
-### Makefile usage
+Or everything in one command:
+```
+make format lint test
+```
+
+
+### Advanced Makefile usage
 
 [`Makefile`](https://github.com/a1d4r/thesis-project/blob/master/Makefile) contains a lot of functions for faster development.
 
@@ -141,6 +122,8 @@ Update all dev libraries to the latest version using one comand
 ```bash
 make update-dev-deps
 ```
+</p>
+</details>
 
 <details>
 <summary>4. Code security</summary>
@@ -164,8 +147,6 @@ make check-poetry
 </p>
 </details>
 
-</p>
-</details>
 
 <details>
 <summary>5. Linting and type checks</summary>
@@ -181,7 +162,7 @@ make static-lint
 </details>
 
 <details>
-<summary>6. Tests with coverage badges</summary>
+<summary>6. Tests</summary>
 <p>
 
 Run `pytest`
@@ -206,7 +187,7 @@ make lint
 the same as:
 
 ```bash
-make test && make check-codestyle && make static-lint && make check-safety
+make format lint test
 ```
 
 </p>
