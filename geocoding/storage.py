@@ -49,7 +49,7 @@ class BaseStorage(Generic[CQLModelType]):
         for cql_object, result in zip(cql_objects, results):
             if isinstance(result, Exception):
                 logger.error(
-                    "Failed to insert row {}: ", dict(cql_object), repr(result)
+                    "Failed to insert row {}: {}", repr(cql_object), repr(result)
                 )
 
     def read(self, hex_id: int) -> Optional[CQLModelType]:
@@ -71,7 +71,7 @@ class BaseStorage(Generic[CQLModelType]):
                 logger.error(
                     "Failed to retrieve row by hex_id={}: {}", hex_id, repr(result)
                 )
-            else:
+            elif result:
                 cql_obj = cast(CQLModelType, self.cql_model_class(**result[0]))
                 results_by_hex_id[hex_id] = cql_obj
         return results_by_hex_id
