@@ -10,17 +10,17 @@ class ScyllaConnector:
     def __init__(
         self,
         session: Session,
-        _max_concurrent_queries: int = settings.SCYLLA_CONCURRENT_QUERIES,
+        max_concurrent_queries: int = settings.SCYLLA_CONCURRENT_QUERIES,
         timeout: int = settings.SCYLLA_TIMEOUT,
     ) -> None:
         """
         Arguments:
             session: Scylla session
-            _max_concurrent_queries: number of queries being executed without blocking
+            max_concurrent_queries: number of queries being executed without blocking
             timeout: operation timeout, in seconds
         """
         self._session = session
-        self._max_concurrent_queries = _max_concurrent_queries
+        self._max_concurrent_queries = max_concurrent_queries
         self._timeout = timeout
 
     def prepare_cql_statement(self, cql_filename: str) -> PreparedStatement:
